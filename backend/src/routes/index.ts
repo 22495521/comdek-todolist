@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { TaskController } from '../controllers/taskController';
-import { validate } from '../middleware/validation';
-import { createTaskSchema, updateTaskSchema } from '../schemas/taskSchemas';
+import { validate, validateQuery } from '../middleware/validation';
+import { createTaskSchema, updateTaskSchema, paginationSchema } from '../schemas/taskSchemas';
 
 const router = Router();
 
@@ -13,7 +13,7 @@ router.get('/health', (_req, res) => {
   });
 });
 
-router.get('/tasks', TaskController.getAllTasks);
+router.get('/tasks', validateQuery(paginationSchema), TaskController.getAllTasks);
 router.get('/tasks/:id', TaskController.getTaskById);
 router.post('/tasks', validate(createTaskSchema), TaskController.createTask);
 router.put('/tasks/:id', validate(updateTaskSchema), TaskController.updateTask);

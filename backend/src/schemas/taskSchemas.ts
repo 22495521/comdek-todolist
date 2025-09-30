@@ -13,3 +13,8 @@ export const updateTaskSchema = Joi.object({
   deadline: Joi.date().allow(null).optional(),
   isDone: Joi.boolean().optional()
 });
+
+export const paginationSchema = Joi.object({
+  page: Joi.number().integer().min(1).default(1),
+  limit: Joi.number().integer().min(1).max(100).default(10)
+});

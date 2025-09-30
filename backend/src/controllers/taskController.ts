@@ -6,18 +6,30 @@ import { AppError } from '../middleware/errorHandler';
 export class TaskController {
   static async getAllTasks(req: Request, res: Response, next: NextFunction) {
     try {
+      const { page = 1, limit = 10 } = (req as any).validatedQuery || {};
+      const skip = (page - 1) * limit;
+
       const taskRepository = AppDataSource.getRepository(Task);
-      const tasks = await taskRepository.find({
+      
+      const [tasks, total] = await taskRepository.findAndCount({
         order: {
           createdAt: 'DESC'
-        }
+        },
+        skip,
+        take: limit
       });
+
+      const totalPages = Math.ceil(total / limit);
 
       res.json({
         success: true,
-        message: '成功獲取所有任務',
+        message: '成功獲取任務列表',
         data: tasks,
-        count: tasks.length
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalItems: total,
+        }
       });
     } catch (error) {
       next(error);
