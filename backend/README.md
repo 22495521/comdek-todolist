@@ -27,6 +27,15 @@ backend/
 
 ## 安裝與啟動
 
+### 前置作業
+確保您已安裝 Node.js，可透過以下指令檢查：
+```bash
+node --version
+npm --version
+```
+
+### 啟動步驟
+
 1. 安裝依賴：
 ```bash
 npm install
@@ -149,13 +158,20 @@ curl -X DELETE http://localhost:3000/tasks/1
 - **TypeScript**: 提供型別安全
 - **Express.js**: 輕量級 web 框架
 - **TypeORM**: ORM 資料庫操作
+- **PostgreSQL**: 關聯式資料庫
 - **Joi**: 資料驗證
 
 
-## 開發環境
+## 系統需求
 
+### 必須安裝
+- **Node.js** (版本 16 或以上) 
+- **npm** (隨 Node.js 一起安裝)
+
+### 開發環境
 - Node.js
-- TypeScript
+- TypeScript  
+- PostgreSQL (需要單獨安裝和設定)
 
 ## 開發歷程
 
