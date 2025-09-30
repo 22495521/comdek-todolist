@@ -43,6 +43,14 @@ function App() {
     fetchTasks()
   }, [currentPage, sortBy, sortOrder])
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchTasks()
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [currentPage, sortBy, sortOrder])
+
   const fetchTasks = async () => {
     setLoading(true)
     try {
