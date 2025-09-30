@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { TaskController } from '../controllers/taskController';
 
 const router = Router();
 
@@ -9,5 +10,8 @@ router.get('/health', (_req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+router.get('/tasks', TaskController.getAllTasks);
+router.get('/tasks/:id', TaskController.getTaskById);
 
 export default router;
