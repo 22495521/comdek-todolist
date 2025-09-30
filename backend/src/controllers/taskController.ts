@@ -69,4 +69,63 @@ export class TaskController {
       next(error);
     }
   }
+
+  static async updateTask(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { task, priority, deadline, isDone } = req.body;
+
+      const taskRepository = AppDataSource.getRepository(Task);
+      const existingTask = await taskRepository.findOne({
+        where: { id: parseInt(id) }
+      });
+
+      if (!existingTask) {
+        throw new AppError(`找不到 ID 為 ${id} 的任務`, 404);
+      }
+
+      const updateData: any = {};
+      if (task !== undefined) updateData.task = task;
+      if (priority !== undefined) updateData.priority = priority;
+      if (deadline !== undefined) updateData.deadline = deadline ? new Date(deadline) : null;
+      if (isDone !== undefined) updateData.isDone = isDone;
+
+      await taskRepository.update(parseInt(id), updateData);
+      const updatedTask = await taskRepository.findOne({
+        where: { id: parseInt(id) }
+      });
+
+      res.json({
+        success: true,
+        message: '任務更新成功',
+        data: updatedTask
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteTask(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const taskRepository = AppDataSource.getRepository(Task);
+      
+      const existingTask = await taskRepository.findOne({
+        where: { id: parseInt(id) }
+      });
+
+      if (!existingTask) {
+        throw new AppError(`找不到 ID 為 ${id} 的任務`, 404);
+      }
+
+      await taskRepository.delete(parseInt(id));
+
+      res.json({
+        success: true,
+        message: '任務刪除成功'
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
