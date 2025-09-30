@@ -6,15 +6,49 @@ import { AppError } from '../middleware/errorHandler';
 export class TaskController {
   static async getAllTasks(req: Request, res: Response, next: NextFunction) {
     try {
-      const { page = 1, limit = 10 } = (req as any).validatedQuery || {};
+      const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC' } = (req as any).validatedQuery || {};
       const skip = (page - 1) * limit;
 
       const taskRepository = AppDataSource.getRepository(Task);
       
+      let orderConfig: any = {};
+      
+      if (sortBy === 'priority') {
+        // 自定義優先級排序：High > Medium > Low
+        const query = taskRepository.createQueryBuilder('task')
+          .orderBy(
+            `CASE 
+              WHEN task.priority = 'High' THEN 1 
+              WHEN task.priority = 'Medium' THEN 2 
+              WHEN task.priority = 'Low' THEN 3 
+            END`,
+            sortOrder
+          )
+          .addOrderBy('task.createdAt', 'DESC')
+          .skip(skip)
+          .take(limit);
+          
+        const [tasks, total] = await query.getManyAndCount();
+        
+        const totalPages = Math.ceil(total / limit);
+
+        res.json({
+          success: true,
+          message: '成功獲取任務列表',
+          data: tasks,
+          pagination: {
+            currentPage: page,
+            totalPages,
+            totalItems: total,
+          }
+        });
+        return;
+      } else {
+        orderConfig[sortBy] = sortOrder;
+      }
+      
       const [tasks, total] = await taskRepository.findAndCount({
-        order: {
-          createdAt: 'DESC'
-        },
+        order: orderConfig,
         skip,
         take: limit
       });
