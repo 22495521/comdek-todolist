@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# 待辦事項清單前端
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+##  技術棧
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 核心技術
+- **React 19.1.1** - 使用函數組件和Hooks
+- **TypeScript** - 提供類型安全和更好的開發體驗
+- **Vite 7.1.7** - 快速的構建工具和開發服務器
 
-## React Compiler
+### 使用者介面框架
+- **Bootstrap 5.3.3** - 響應式介面設計
+- **CSS** - 自定義樣式
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+##  主要功能
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **任務管理** - 完整的增刪改查操作（新增、讀取、修改、刪除）
+- **即時更新** - 每5秒自動重新整理資料
+- **排序功能** - 支援優先順序、截止日期、建立時間排序
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+##  API 整合
+
+與後端 Express API 完整整合：
+- `GET /tasks` - 取得任務清單（支援分頁和排序）
+- `POST /tasks` - 建立新任務
+- `PUT /tasks/:id` - 更新任務
+- `DELETE /tasks/:id` - 刪除任務
+
+##  安裝與執行
+
+```bash
+# 安裝相依套件
+npm install
+
+# 啟動開發伺服器
+npm run dev
+
+# 建置正式版本
+npm run build
+
+# 程式碼檢查
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+##  專案結構
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```
+src/
+├── App.tsx          # 主要應用程式元件
+├── App.css          # 主要樣式檔案
+├── main.tsx         # 應用程式進入點
+├── index.css        # 全域樣式
+└── assets/          # 靜態資源
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+##  核心特色
+
+
+
+### React Hooks 使用
+- `useState` - 狀態管理
+- `useEffect` - 副作用處理（API 呼叫、計時器）
+
+
+
+##  即時功能
+
+使用 `setInterval` 實現自動重新整理機制，確保資料同步：
+```typescript
+useEffect(() => {
+  const interval = setInterval(() => {
+    fetchTasks()
+  }, 5000)
+  
+  return () => clearInterval(interval)
+}, [currentPage, sortBy, sortOrder])
 ```
