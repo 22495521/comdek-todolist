@@ -56,6 +56,30 @@ npm run build
 npm start
 ```
 
+## Docker 部署
+
+### 建置 Docker 映像
+```bash
+docker build -t todolist-backend .
+```
+
+### 執行 Docker 容器
+```bash
+# 基本執行
+docker run -p 3000:3000 todolist-backend
+
+# 帶環境變數執行
+docker run -p 3000:3000 \
+  -e PORT=3000 \
+  -e NODE_ENV=production \
+  -e DB_HOST=your_db_host \
+  -e DB_PORT=5432 \
+  -e DB_USERNAME=your_username \
+  -e DB_PASSWORD=your_password \
+  -e DB_DATABASE=your_database \
+  todolist-backend
+```
+
 ## API 端點
 
 ### 健康檢查
