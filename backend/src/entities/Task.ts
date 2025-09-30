@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export enum Priority {
-  LOW = 'Low',
+  HIGH = 'High',
   MEDIUM = 'Medium',
-  HIGH = 'High'
+  LOW = 'Low'
 }
 
 @Entity()

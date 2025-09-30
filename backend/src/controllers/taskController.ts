@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppDataSource } from '../config/database';
-import { Task } from '../entities/Task';
+import { Task, Priority } from '../entities/Task';
 import { AppError } from '../middleware/errorHandler';
 
 export class TaskController {
@@ -40,6 +40,30 @@ export class TaskController {
         success: true,
         message: '成功獲取任務',
         data: task
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async createTask(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { task, priority, deadline } = req.body;
+
+      const taskRepository = AppDataSource.getRepository(Task);
+      const newTask = taskRepository.create({
+        task,
+        priority,
+        deadline: deadline ? new Date(deadline) : null,
+        isDone: false
+      });
+
+      const savedTask = await taskRepository.save(newTask);
+
+      res.status(201).json({
+        success: true,
+        message: '任務創建成功',
+        data: savedTask
       });
     } catch (error) {
       next(error);
